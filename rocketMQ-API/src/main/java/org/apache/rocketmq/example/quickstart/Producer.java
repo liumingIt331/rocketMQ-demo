@@ -20,6 +20,7 @@ import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.common.message.Message;
+import org.apache.rocketmq.example.ConfigConstant;
 import org.apache.rocketmq.remoting.common.RemotingHelper;
 
 /**
@@ -48,7 +49,7 @@ public class Producer {
         /*
          * Launch the instance.
          */
-        producer.setNamesrvAddr("worker1:9876");
+        producer.setNamesrvAddr(ConfigConstant.NAMESRV_ADDR);
         producer.start();
 
         for (int i = 0; i < 2; i++) {
@@ -58,15 +59,18 @@ public class Producer {
                  * Create a message instance, specifying topic, tag and message body.
                  */
                 Message msg = new Message("TopicTest" /* Topic */,
-                    "TagA" /* Tag */,
-                    ("Hello RocketMQ " + i).getBytes(RemotingHelper.DEFAULT_CHARSET) /* Message body */
+                        "TagA" /* Tag */,
+                        ("Hello RocketMQ " + i).getBytes(RemotingHelper.DEFAULT_CHARSET) /* Message body */
                 );
                 //messageDelayLevel=1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h
-                msg.setDelayTimeLevel(3);
+
+                // 延迟消息配置
+//                msg.setDelayTimeLevel(3);
                 /*
                  * Call send message to deliver message to one of brokers.
                  */
-                SendResult sendResult = producer.send(msg);
+                // 设置超时时间，本地连接虚拟机容易超时，默认3s
+                SendResult sendResult = producer.send(msg, 10 * 1000);
 
                 System.out.printf("%s%n", sendResult);
             } catch (Exception e) {

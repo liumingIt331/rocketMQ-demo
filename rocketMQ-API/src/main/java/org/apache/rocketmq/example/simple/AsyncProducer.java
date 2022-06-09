@@ -21,6 +21,7 @@ import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.common.message.Message;
+import org.apache.rocketmq.example.ConfigConstant;
 import org.apache.rocketmq.remoting.common.RemotingHelper;
 
 import java.io.UnsupportedEncodingException;
@@ -30,10 +31,10 @@ import java.util.concurrent.TimeUnit;
 //简单样例：异步发送消息
 public class AsyncProducer {
     public static void main(
-        String[] args) throws MQClientException, InterruptedException, UnsupportedEncodingException {
+            String[] args) throws MQClientException, InterruptedException, UnsupportedEncodingException {
 
         DefaultMQProducer producer = new DefaultMQProducer("Jodie_Daily_test");
-        producer.setNamesrvAddr("192.168.232.128:9876");
+        producer.setNamesrvAddr(ConfigConstant.NAMESRV_ADDR);
         producer.start();
         producer.setRetryTimesWhenSendAsyncFailed(3);
 
@@ -44,9 +45,9 @@ public class AsyncProducer {
             try {
                 final int index = i;
                 Message msg = new Message("TopicTest",
-                    "TagA",
-                    "OrderID188",
-                    "Hello world".getBytes(RemotingHelper.DEFAULT_CHARSET));
+                        "TagA",
+                        "OrderID188",
+                        "Hello world".getBytes(RemotingHelper.DEFAULT_CHARSET));
                 producer.send(msg, new SendCallback() {
                     @Override
                     public void onSuccess(SendResult sendResult) {
@@ -60,7 +61,7 @@ public class AsyncProducer {
                         System.out.printf("%-10d Exception %s %n", index, e);
                         e.printStackTrace();
                     }
-                });
+                }, 20 * 1000);
                 System.out.println("消息发送完成");
             } catch (Exception e) {
                 e.printStackTrace();

@@ -32,6 +32,7 @@ public class TransactionListenerImpl implements TransactionListener {
 
     @Override
     public LocalTransactionState executeLocalTransaction(Message msg, Object arg) {
+        System.out.println("提交本地事务：" + msg.getTags());
 //        int value = transactionIndex.getAndIncrement();
 //        int status = value % 3;
 //        localTrans.put(msg.getTransactionId(), status);
@@ -49,6 +50,7 @@ public class TransactionListenerImpl implements TransactionListener {
 
     @Override
     public LocalTransactionState checkLocalTransaction(MessageExt msg) {
+        System.out.println("回查本地事务：" + msg.getTags());
 //        Integer status = localTrans.get(msg.getTransactionId());
 //        if (null != status) {
 //            switch (status) {

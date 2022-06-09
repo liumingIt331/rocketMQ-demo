@@ -24,6 +24,7 @@ import org.apache.rocketmq.client.producer.MessageQueueSelector;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.common.message.MessageQueue;
+import org.apache.rocketmq.example.ConfigConstant;
 import org.apache.rocketmq.remoting.common.RemotingHelper;
 import org.apache.rocketmq.remoting.exception.RemotingException;
 
@@ -34,6 +35,7 @@ public class Producer {
     public static void main(String[] args) throws UnsupportedEncodingException {
         try {
             DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
+            producer.setNamesrvAddr(ConfigConstant.NAMESRV_ADDR);
             producer.start();
 
             for (int i = 0; i < 10; i++) {
@@ -50,7 +52,7 @@ public class Producer {
                             int index = id % mqs.size();
                             return mqs.get(index);
                         }
-                    }, orderId);
+                    }, orderId, 10 * 1000);
 
                     System.out.printf("%s%n", sendResult);
                 }

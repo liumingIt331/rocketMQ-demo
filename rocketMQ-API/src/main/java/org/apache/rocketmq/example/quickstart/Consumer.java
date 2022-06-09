@@ -16,15 +16,14 @@
  */
 package org.apache.rocketmq.example.quickstart;
 
-import org.apache.rocketmq.client.consumer.AllocateMessageQueueStrategy;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
-import org.apache.rocketmq.client.consumer.rebalance.AllocateMachineRoomNearby;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
+import org.apache.rocketmq.example.ConfigConstant;
 
 import java.util.List;
 
@@ -55,7 +54,7 @@ public class Consumer {
         /*
          * Specify where to start in case the specified consumer group is a brand new one.
          */
-        consumer.setNamesrvAddr("192.168.232.128:9876");
+        consumer.setNamesrvAddr(ConfigConstant.NAMESRV_ADDR);
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         /*
          * Subscribe one more more topics to consume.

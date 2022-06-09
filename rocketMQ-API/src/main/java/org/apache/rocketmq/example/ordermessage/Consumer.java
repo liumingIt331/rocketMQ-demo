@@ -21,6 +21,7 @@ import org.apache.rocketmq.client.consumer.listener.*;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
+import org.apache.rocketmq.example.ConfigConstant;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -30,11 +31,12 @@ public class Consumer {
 
     public static void main(String[] args) throws MQClientException {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("please_rename_unique_group_name_3");
-//        consumer.setNamesrvAddr("localhost:9876");
+        consumer.setNamesrvAddr(ConfigConstant.NAMESRV_ADDR);
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
 
         consumer.subscribe("OrderTopicTest", "*");
 
+        // MessageListenerOrderly 通过锁队列保证消息是一个一个队列来取
         consumer.registerMessageListener(new MessageListenerOrderly() {
             @Override
             public ConsumeOrderlyStatus consumeMessage(List<MessageExt> msgs, ConsumeOrderlyContext context) {
@@ -46,7 +48,7 @@ public class Consumer {
             }
         });
 
-//        这样是保证不了最终消费顺序的。
+//        这样是保证不了最终消费顺序的。  MessageListenerConcurrently
 //        consumer.registerMessageListener(new MessageListenerConcurrently() {
 //            @Override
 //            public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
